@@ -1,0 +1,32 @@
+<!--
+ - Created by Master on 20.11.2019.
+ -->
+
+<aura:component description="FilterComponent">
+    <div class="mainDiv">
+        <h5>Choose price</h5>
+        <lightning:input type="number"  placeholder="min"/>
+        <lightning:input type="number"  placeholder="max"/>
+        <!--<lightning:layout horizontalAlign="space" class="layoutMain">
+            <lightning:layoutItem padding="around-small" class="slds-size_4-of-8">
+                <div class="row">
+                    <lightning:input type="number"  placeholder="min"/>
+                </div>
+            </lightning:layoutItem>
+            &lt;!&ndash;<aura:attribute name="amount" type="Integer"/>&ndash;&gt;
+            <lightning:layoutItem padding="around-small" class="slds-size_4-of-8">
+                <div class="row">
+                    <lightning:input type="number"  placeholder="max"/>
+                </div>
+            </lightning:layoutItem>
+
+
+        </lightning:layout>-->
+    </div>
+    <div>
+        <h5>Choose price</h5>
+        <lightning:input type="number"  placeholder="min"/>
+        <lightning:input type="number"  placeholder="max"/>
+    </div>
+    <div></div>
+</aura:component>

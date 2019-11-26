@@ -1,0 +1,41 @@
+<!--
+ - Created by Master on 20.11.2019.
+ -->
+
+<aura:component description="ProductTableComponent" controller="ProductTableController">
+
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="products" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="detailProduct" type="Product2" required="false" description="" access="public"/>
+    <aura:attribute name="isDetail" type="boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div>
+        <aura:iteration items="{!v.products}" var="item">
+            <lightning:card title="{!item.Name}">
+                <lightning:layout verticalAlign="center">
+                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
+                        <img src="{!item.Picture__c}" width="50" height="50"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
+                        <p>{!item.Price__c}$</p>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_3-of-8">
+                        <p>{!item.Description}</p>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
+                        <lightning:button value="{!item.Id}" label="To basket" onclick="{!c.toBasket }"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
+                        <lightning:button value="{!item}" label="Details" onclick="{!c.details }"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </aura:iteration>
+    </div>
+    <aura:if isTrue="{!v.isDetail}">
+        <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}" />
+    </aura:if>
+</aura:component>
+

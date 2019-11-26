@@ -1,0 +1,28 @@
+<!--
+ - Created by Master on 20.11.2019.
+ -->
+
+<aura:component description="HeaderComponent">
+    <aura:handler name="change" value="{!v.basket}" action="{!c.countCoast}"/>
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+
+
+    <div class="mainDiv">
+        <lightning:layout horizontalAlign="space" class="layoutMain">
+            <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
+                <div>
+                    <img src="https://www.trzcacak.rs/myfile/full/227-2270330_retail-icon-shop-transparent-png.png"/>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" class="slds-size_5-of-8">
+                <div >
+                    <h1 class="h1Logo">The best shop</h1>
+                    <h3>buy and be happy</h3>
+                </div>
+            </lightning:layoutItem>
+
+        </lightning:layout>
+    </div>
+</aura:component>
+
+

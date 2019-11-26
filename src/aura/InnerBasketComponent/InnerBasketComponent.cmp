@@ -1,0 +1,47 @@
+<!--
+ - Created by Master on 22.11.2019.
+ -->
+
+<aura:component description="InnerBasketComponent">
+
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="detailProduct" type="Product2" required="false" description="" access="public"/>
+    <aura:attribute name="isDetail" type="boolean" default="false"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="isRegister" type="boolean" default="false"/>
+    <aura:attribute name="isBasket" type="Boolean" required="false" description="" access="public"/>
+    <aura:attribute name="firstName" type="String"/>
+
+
+
+    <div>
+        <aura:iteration items="{!v.basket}" var="item">
+            <lightning:card title="{!item.Name}">
+                <lightning:layout verticalAlign="center">
+                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
+                        <img src="{!item.Picture__c}" width="50" height="50"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
+                        <p>{!item.Price__c}$</p>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_3-of-8">
+                        <p>{!item.Description}</p>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
+                        <lightning:button value="{!item}" label="Details" onclick="{!c.details }"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:card>
+        </aura:iteration>
+        <lightning:button label="Order" onclick="{!c.openModel }"/>
+        <lightning:button label="Back to shop" onclick="{!c.backToShop }"/>
+    </div>
+    <aura:if isTrue="{!v.isOpen}">
+        <c:PopupLoginComponent isOpen="{!v.isOpen}" basket="{!v.basket}"/>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isDetail}">
+        <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}" />
+    </aura:if>
+
+</aura:component>

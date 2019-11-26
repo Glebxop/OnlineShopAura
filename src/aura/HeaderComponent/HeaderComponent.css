@@ -1,0 +1,42 @@
+/**
+ * Created by Master on 20.11.2019.
+ */
+
+.THIS .imgLogo{
+     padding-top: 60px;
+     padding:absolute;
+     float:left;
+     height: 30%;
+     width : 100px;
+     margin: 0px 0px 10px 10px;
+    }
+    .THIS.titleSite{
+        position:absolute;
+        float:right;
+        right:15px;
+        margin: 0px 100px 100px 10px;
+    }
+    .THIS.mainDiv{
+        background-color : blue;
+        position:inherit;
+        height:500%;
+        outline: 3px solid #DCDCDC;
+        border: 2px solid #fff;
+        border-radius: 10px;
+    }
+    .THIS.h1Logo{
+        font-size:300pt;
+    }
+    .THIS h1 {
+        text-align:center;
+        font-size:250%;
+
+    }
+.THIS h3 {
+        text-align:center;
+        font-size:150%;
+    }
+   /*.layoutMain.THIS  {
+        background-color:blue;
+        color: green;
+    }*/

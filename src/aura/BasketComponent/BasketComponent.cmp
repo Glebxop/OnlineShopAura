@@ -1,0 +1,29 @@
+<!--
+ - Created by Master on 20.11.2019.
+ -->
+
+<aura:component description="BasketComponent">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.basket}" action="{!c.changeBasket}"/>
+
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="totalValue" type="Integer" required="false" description="" access="public"/>
+    <aura:attribute name="isBasket" type="Boolean" required="false" description="" access="public"/>
+
+    <div class="mainDiv">
+        <lightning:layout horizontalAlign="space">
+            <lightning:layoutItem padding="around-small" class="slds-size_8-of-8">
+                <img width="70" height="70" src="https://image.flaticon.com/icons/png/512/34/34627.png"
+                     onclick="{!c.goToBasket}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <lightning:layout horizontalAlign="space" class="layoutMain">
+            <h4>Your total cost:{!v.totalValue}</h4>
+        </lightning:layout>
+        <lightning:layout horizontalAlign="space" class="layoutMain">
+            <h6>Click on basket go to basket</h6>
+        </lightning:layout>
+
+
+    </div>
+</aura:component>

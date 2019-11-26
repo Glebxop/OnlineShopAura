@@ -1,0 +1,42 @@
+<!--
+ - Created by Master on 20.11.2019.
+ -->
+<aura:component description="MainPage" implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="isBasket" type="Boolean" required="false" description="" access="public" default="true"/>
+
+    <!--<aura:handler name="change" value="{!v.isBasket}" action="{!c.isBasketAction}"/>-->
+
+    <div>
+        <lightning:layout horizontalAlign="space">
+            <lightning:layoutItem class="slds-size_5-of-8">
+                <c:HeaderComponent basket="{!v.basket}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem class="slds-size_3-of-8">
+                <c:BasketComponent basket="{!v.basket}" isBasket="{!v.isBasket}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+
+    <aura:if isTrue="{!v.isBasket}">
+
+
+        <lightning:layout horizontalAlign="space">
+            <lightning:layoutItem padding="around-small" class="slds-size_2-of-8,slds-text-align--left">
+                <c:FilterComponent/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-small" class="slds-size_6-of-8">
+                <c:ProductTableComponent basket="{!v.basket}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem>
+
+            </lightning:layoutItem>
+        </lightning:layout>
+        <aura:set attribute="else">
+            <c:InnerBasketComponent basket="{!v.basket}" isBasket="{!v.isBasket}"/>
+        </aura:set>
+    </aura:if>
+
+
+</aura:component>
+

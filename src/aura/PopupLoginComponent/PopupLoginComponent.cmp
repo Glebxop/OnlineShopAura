@@ -1,0 +1,107 @@
+<!--
+ - Created by Master on 22.11.2019.
+ -->
+<!--//class="slds-hide  $A.util.toggleClass(buttons, 'slds-hide'); $A.util.addClass(div, 'slds-hide');-->
+<aura:component description="PopupLoginComponent" controller="LoginController">
+
+    <aura:attribute name="isRegister" type="boolean" default="false"/>
+    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="name" type="String"/>
+    <aura:attribute name="email" type="String"/>
+    <aura:attribute name="code" type="String"/>
+    <aura:attribute name="isOpen" type="boolean"/>
+    <aura:attribute name="dateTimeOFDispatch" type="Datetime"/>
+
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+             aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+
+            <!-- ###### MODAL BOX HEADER Start ######-->
+
+            <header class="slds-modal__header">
+
+
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeModel }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"
+                                      class="slds-modal__close"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Login</h2>
+            </header>
+
+            <div class="slds-hide" aura:id="orderDiv">
+                <lightning:input type="datetime-local" value="{!v.dateTimeOFDispatch}" name="dateDispatch"
+                                 label="Enter a date/time value"/>
+                <lightning:button variant="neutral"
+                                  label="get my order"
+                                  title="get my order"
+                                  onclick="{! c.getMyOrder }"/>
+            </div>
+
+            <div class="slds-show" aura:id="loginOrRegisterDiv">
+                <div aura:id="buttons" class="slds-show">
+                    <lightning:button variant="neutral"
+                                      label="Register"
+                                      title="Register"
+                                      onclick="{! c.register }"/>
+                    <lightning:button variant="neutral"
+                                      label="Log in"
+                                      title="Log in"
+                                      onclick="{! c.logIn }"/>
+                </div>
+                <div aura:id="loginFields" class="slds-hide">
+                    <lightning:input name="input" value="{! v.name }" placeholder="type your first name..."
+                                     label="Text field with attribute binding"/>
+                    <lightning:input type="email" value="{!v.email}" name="email3" placeholder="youraddress@company.com"
+                                     label="Email field with a placeholder"/>
+                </div>
+                <div aura:id="loginButton" class="slds-hide">
+                    <lightning:button variant="neutral"
+                                      label="Log in"
+                                      title="Log in"
+                                      onclick="{! c.logInCallout }"/>
+                </div>
+                <div aura:id="registrationField" class="slds-hide">
+                    <lightning:button variant="neutral"
+                                      label="get code"
+                                      title="get code"
+                                      onclick="{! c.sendCode }"/>
+                    <lightning:input name="code" value="{! v.code }" placeholder="type your code" label=""/>
+                    <lightning:button variant="neutral"
+                                      label="Apply"
+                                      title="Apply"
+                                      onclick="{! c.applyCode }"/>
+                </div>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <!--<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:input name="input" value="{! v.firstName }" placeholder="type your first name..." label="Text field with attribute binding" />
+                    <lightning:input type="email" name="email3" placeholder="youraddress@company.com" label="Email field with a placeholder" />
+                    <lightning:button variant="neutral"
+                                      label="Apply"
+                                      title="Apply"
+                                      onclick="{! c.apply }"/>
+                    <div id="activate" class="slds-hide">
+                        <lightning:input name="input2"  placeholder="Enter code" label="" />
+                        <lightning:button variant="neutral"
+                                          label="Apply Code"
+                                          title="Apply Code"
+                                          onclick="{! c.applyCode }"/>
+                    </div>
+                </div>
+                &lt;!&ndash;###### MODAL BOX FOOTER Part Start ######&ndash;&gt;-->
+                <!--<footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Login"
+                                      title="Login"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Register"
+                                      title="Register"
+                                      onclick="{! c.register }"/>
+                </footer>-->
+            </div></div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+
+</aura:component>
