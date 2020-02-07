@@ -2,24 +2,23 @@
  - Created by Master on 22.11.2019.
  -->
 
-<apex:page id="VFforComunity" showHeader="false">
-    <apex:includeLightning/>
-    <apex:slds/>
-    <div id="connectApp"></div>
-    <script>
-    $Lightning.use("c:HotelsApp", function() {
-    $Lightning.createComponent("c:HotelsMain",
-    {},
-   "connectApp",
-    function(component) {
-        console.log("Component is created!");
-        console.log(component);
-    });
- });
+<apex:page id="VFforComunity" showHeader="false" >
 
+
+
+        <apex:includeScript value="/lightning/lightning.out.js" />
+
+        <script>
+        $Lightning.use("c:ShoppApplication", function() {
+            $Lightning.createComponent(
+                "c:MainPage",
+                {},
+                "theLead",
+                function(cmp) {
+
+                });
+            });
     </script>
-    <div class="slds-card__footer slds-text-align_center">
-        <h3>© 2019 Vladimir Valitsky All Rights Reserved </h3>
-    </div>
 
-</apex:page>
+        <div id="theLead"></div>
+    </apex:page>

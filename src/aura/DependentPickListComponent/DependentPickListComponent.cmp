@@ -1,0 +1,45 @@
+<!--
+ - Created by Master on 27.11.2019.
+ -->
+
+<aura:component description="DependentPickListComponent" controller="DependentPicklist">
+    <!-- call doInit function on component load -->
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+
+    <!-- aura attributes-->
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/>
+
+    <aura:attribute name="objDetail" type="Product2" default="{'sobjectType' : 'product2'}"/>
+    <aura:attribute name="controllingFieldAPI" type="string" default="Type__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="Subtype__c" description="store field API name of dependent field"/>
+
+    <aura:attribute name="dependingType" type="string"  description="store field API name of dependent field"/>
+    <aura:attribute name="dependingSubtype" type="string" description="store field API name of dependent field"/>
+
+    <lightning:layoutItem size="12">
+        <lightning:select  name="controllerFld"
+                          value="{!v.dependingType}"
+                          label="Type"
+                          onchange="{!c.onControllerFieldChange}">
+            <aura:iteration items="{!v.listControllingValues}" var="val">
+                <option value="{!val}">{!val}</option>
+            </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+
+    <!--Dependent Field-->
+    <lightning:layoutItem size="12">
+        <lightning:select name="dependentFld"
+                          value="{!v.dependingSubtype}"
+                          label="Subtype"
+                          disabled="{!v.bDisabledDependentFld}">
+            <aura:iteration items="{!v.listDependingValues}" var="val">
+                <option value="{!val}">{!val}</option>
+            </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+
+</aura:component>

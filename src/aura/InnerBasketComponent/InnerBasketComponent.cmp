@@ -4,44 +4,75 @@
 
 <aura:component description="InnerBasketComponent">
 
-    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="basket" type="List" required="false" description="" access="public"/>
     <aura:attribute name="detailProduct" type="Product2" required="false" description="" access="public"/>
     <aura:attribute name="isDetail" type="boolean" default="false"/>
     <aura:attribute name="isOpen" type="boolean" default="false"/>
-    <aura:attribute name="isRegister" type="boolean" default="false"/>
     <aura:attribute name="isBasket" type="Boolean" required="false" description="" access="public"/>
-    <aura:attribute name="firstName" type="String"/>
+    <aura:attribute name="totalValue" type="Integer" required="false" description="" access="public"/>
 
+    <aura:registerEvent name="appEvent" type="c:CleaneBasket"/>
 
-
-    <div>
-        <aura:iteration items="{!v.basket}" var="item">
-            <lightning:card title="{!item.Name}">
-                <lightning:layout verticalAlign="center">
-                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
-                        <img src="{!item.Picture__c}" width="50" height="50"/>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
-                        <p>{!item.Price__c}$</p>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_3-of-8">
-                        <p>{!item.Description}</p>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
-                        <lightning:button value="{!item}" label="Details" onclick="{!c.details }"/>
-                    </lightning:layoutItem>
-                </lightning:layout>
-            </lightning:card>
-        </aura:iteration>
-        <lightning:button label="Order" onclick="{!c.openModel }"/>
-        <lightning:button label="Back to shop" onclick="{!c.backToShop }"/>
+    <div class="slds-p-around-small">
+        <div class="slds-text-align_center slds-p-top--small">
+            <aura:if isTrue="{!not(empty(v.basket))}">
+                <lightning:button label="Order" onclick="{!c.openModel }" variant="success"/>
+            </aura:if>
+            <lightning:button label="Back to shop" onclick="{!c.backToShop }" variant="brand"/>
+        </div>
+        <aura:if isTrue="{!not(empty(v.basket))}">
+            <div class="slds-p-around--small">
+                <aura:iteration items="{!v.basket}" var="item">
+                    <lightning:card title="{!item.Name}">
+                        <lightning:layout verticalAlign="end">
+                            <lightning:layoutItem size="2" padding="around-small" class="slds-text-align_center">
+                                <img src="{!item.Picture__c}" width="50" height="50"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="1" padding="around-small">
+                                <p>{!item.Price__c}$</p>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4" padding="around-small">
+                                <p>{!item.Description}</p>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="1" padding="around-small">
+                                <div class="slds-align_absolute-center slds-text-align_center">
+                                    <p>Available: {!item.Number_of_product__c}</p>
+                                </div>
+                                <div class="slds-align_absolute-center slds-text-align_center slds-size--9-of-12">
+                                    <lightning:input name="{!item.Id}" type="number" max="{!item.Number_of_product__c}"
+                                                     min="1" placeholder="how many" value="{!item.count}"
+                                                     class="howMany"
+                                                     onchange="{!c.howMany}"/>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="2" padding="around-small">
+                                <div class="slds-align_absolute-center slds-text-align_center">
+                                    <lightning:button value="{!item}" label="Details" variant="brand"
+                                                      onclick="{!c.details }"/>
+                                    <lightning:button value="{!item.Id}" label="Delete" variant="brand"
+                                                      onclick="{!c.deleteFromBasket }"/>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:card>
+                </aura:iteration>
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-text-align_center slds-p-around--small">
+                    <img src="https://icon-library.net/images/sorry-icon/sorry-icon-12.jpg" height="300"
+                         width="300"/>
+                    <h1 class="h1Logo slds-text-align_center">It's empty</h1>
+                </div>
+            </aura:set>
+        </aura:if>
     </div>
     <aura:if isTrue="{!v.isOpen}">
-        <c:PopupLoginComponent isOpen="{!v.isOpen}" basket="{!v.basket}"/>
+        <c:PopupLoginComponent totalValue="{!v.totalValue}" isOpen="{!v.isOpen}" basket="{!v.basket}"
+                               isBasket="{!v.isBasket}"/>
     </aura:if>
 
     <aura:if isTrue="{!v.isDetail}">
-        <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}" />
+        <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}"/>
     </aura:if>
 
 </aura:component>

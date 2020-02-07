@@ -3,6 +3,5 @@
  */
 
 ({
-    countCoast : function(cmp,ev,helper){
-    }
+
 });

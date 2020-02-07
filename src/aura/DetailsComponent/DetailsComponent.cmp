@@ -18,19 +18,19 @@
                                       alternativeText="close"
                                       variant="bare-inverse"
                                       class="slds-modal__close"/>
-                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Detail</h2>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.detailProduct.Name}</h2>
             </header>
 
             <div>
-                <lightning:card title="{!v.detailProduct.Name}">
+                <lightning:card>
                     <lightning:layout verticalAlign="center">
                         <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
-                            <img src="{!v.detailProduct.Picture__c}" width="50" height="50"/>
+                            <img src="{!v.detailProduct.Picture__c}" width="150" height="150"/>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
                             <p>{!v.detailProduct.Price__c}$</p>
                         </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-small" class="slds-size_3-of-8">
+                        <lightning:layoutItem padding="around-small" class="slds-size_5-of-8">
                             <p>{!v.detailProduct.Description}</p>
                         </lightning:layoutItem>
                     </lightning:layout>
@@ -38,4 +38,5 @@
             </div>
         </div>
     </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
 </aura:component>

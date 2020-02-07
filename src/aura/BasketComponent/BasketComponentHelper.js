@@ -4,12 +4,15 @@
 
 ({
 setTotalCount : function (cmp){
-            let totalPrice=0;
+            let totalPrice = 0;
             let basket = cmp.get("v.basket");
+            let prodInBasket = Number(0);
             if(typeof basket !== undefined){
             for (let i = 0; i < basket.length; i++) {
-             totalPrice += basket[i].Price__c;
+            prodInBasket += Number(basket[i].count);
+             totalPrice += basket[i].Price__c*basket[i].count;
             }}
-            cmp.set("v.totalValue",totalPrice);
+            cmp.set("v.countInBasket",prodInBasket);
+            cmp.set("v.totalValue",Number(totalPrice));
 }
 });

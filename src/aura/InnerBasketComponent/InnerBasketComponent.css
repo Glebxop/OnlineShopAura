@@ -1,0 +1,15 @@
+/**
+ * Created by Master on 12.12.2019.
+ */
+
+/*
+.THIS.buttonsDiv{
+    background-color : blue;
+    */
+/*padding-top:12px;*//*
+
+}*/
+
+.THIS input:focus{
+    outline-offset: 0px !important;
+}

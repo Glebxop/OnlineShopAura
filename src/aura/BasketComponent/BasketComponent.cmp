@@ -1,29 +1,30 @@
-<!--
- - Created by Master on 20.11.2019.
- -->
 
 <aura:component description="BasketComponent">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-    <aura:handler name="change" value="{!v.basket}" action="{!c.changeBasket}"/>
+    <aura:handler name="change" value="{!v.basket}" action="{!c.doInit}"/>
 
-    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
-    <aura:attribute name="totalValue" type="Integer" required="false" description="" access="public"/>
-    <aura:attribute name="isBasket" type="Boolean" required="false" description="" access="public"/>
+    <aura:attribute name="basket" type="Product2[]" access="public"/>
+    <aura:attribute name="totalValue" type="Integer" access="public"/>
+    <aura:attribute name="isBasket" type="Boolean" access="public"/>
+    <aura:attribute name="countInBasket" type="Integer" access="public"/>
 
-    <div class="mainDiv">
+
+    <div class="mainDiv slds-text-align_center">
         <lightning:layout horizontalAlign="space">
-            <lightning:layoutItem padding="around-small" class="slds-size_8-of-8">
+            <lightning:layoutItem padding="around-small" class="slds-size_8-of-8 slds-align_absolute-center">
                 <img width="70" height="70" src="https://image.flaticon.com/icons/png/512/34/34627.png"
-                     onclick="{!c.goToBasket}"/>
+                     onclick="{!c.goToBasket}" />
+                <aura:if isTrue="{!v.countInBasket>0}">
+                    <div class="slds-text-heading--medium slds-align-bottom" >{!v.countInBasket}</div>
+                </aura:if>
             </lightning:layoutItem>
         </lightning:layout>
-        <lightning:layout horizontalAlign="space" class="layoutMain">
-            <h4>Your total cost:{!v.totalValue}</h4>
+        <lightning:layout horizontalAlign="space" class="layoutMain slds-align_absolute-center">
+            <div class="slds-text-heading--medium" >Your total cost:{!v.totalValue}$</div>
         </lightning:layout>
-        <lightning:layout horizontalAlign="space" class="layoutMain">
-            <h6>Click on basket go to basket</h6>
+        <lightning:layout horizontalAlign="space" class="layoutMain slds-align_absolute-center">
+            <div class="slds-text-heading--small">Click on the basket and get into it</div>
         </lightning:layout>
-
 
     </div>
 </aura:component>

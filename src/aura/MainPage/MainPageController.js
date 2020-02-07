@@ -3,7 +3,9 @@
  */
 
 ({
-isBasketAction : function(){
-    alert('ISInnerBasket');
+
+    cleane:function(cmp,ev,help){
+        cmp.set("v.basket",[]);
     }
+
 });

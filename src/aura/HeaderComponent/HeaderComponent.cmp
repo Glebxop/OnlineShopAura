@@ -2,27 +2,31 @@
  - Created by Master on 20.11.2019.
  -->
 
-<aura:component description="HeaderComponent">
+<aura:component description="HeaderComponent"
+                implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global">
     <aura:handler name="change" value="{!v.basket}" action="{!c.countCoast}"/>
-    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="basket" type="List" required="false" description="" access="public"/>
+    <aura:attribute name="totalValue" type="Integer" required="false" access="public"/>
+    <aura:attribute name="isBasket" type="Boolean" required="false" access="public"/>
 
-
-    <div class="mainDiv">
-        <lightning:layout horizontalAlign="space" class="layoutMain">
-            <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
-                <div>
-                    <img src="https://www.trzcacak.rs/myfile/full/227-2270330_retail-icon-shop-transparent-png.png"/>
-                </div>
-            </lightning:layoutItem>
-            <lightning:layoutItem padding="around-small" class="slds-size_5-of-8">
-                <div >
-                    <h1 class="h1Logo">The best shop</h1>
-                    <h3>buy and be happy</h3>
-                </div>
-            </lightning:layoutItem>
-
-        </lightning:layout>
-    </div>
+    <lightning:layout>
+        <lightning:layoutItem padding="around-small" size="3">
+            <div>
+                <img src="https://www.trzcacak.rs/myfile/full/227-2270330_retail-icon-shop-transparent-png.png"/>
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem padding="around-small slds-text-align_center" size="6">
+            <br/>
+            <div class="slds-text-align_center ">
+                <div class="h1Logo slds-align_absolute-center slds-text-heading_large">The best shop</div>
+                <br/>
+                <div class="h1Logo slds-align_absolute-center slds-text-heading_medium">buy and be happy</div>
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3">
+            <c:BasketComponent totalValue="{!v.totalValue}" basket="{!v.basket}" isBasket="{!v.isBasket}"/>
+        </lightning:layoutItem>
+    </lightning:layout>
 </aura:component>
 
 

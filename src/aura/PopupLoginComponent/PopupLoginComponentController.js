@@ -3,180 +3,72 @@
  */
 
 ({
-    openModel: function(component, event, helper) {
-         // for Display Model,set the "isOpen" attribute to "true"
-         component.set("v.isOpen", true);
-    },
 
-    closeModel: function(component, event, helper) {
-         component.set("v.isOpen", false);//helper.closeModelHelper(component);
-    },
+   loginButton : function(component, event, helper){
+       let loginOrRegisterDiv = component.find('loginOrRegistration');
+       $A.util.addClass(loginOrRegisterDiv, 'slds-hide');
+       $A.util.removeClass(component.find('loginDiv'),'slds-hide');
+   },
 
-    logIn : function(component, event, helper) {
-        //.removeClass
-         $A.util.addClass(component.find('buttons'), 'slds-hide');
-         $A.util.removeClass(component.find('loginFields'), 'slds-hide');
-         $A.util.removeClass(component.find('loginButton'), 'slds-hide');
-    },
+   registrationButton : function(component, event, helper){
+       $A.util.addClass(component.find('loginOrRegistration'), 'slds-hide');
+       $A.util.removeClass(component.find('registrationDiv'),'slds-hide');
+       component.set("v.header","Registration");
+   },
 
-    register : function(component, event, helper) {
-         $A.util.addClass(component.find('buttons'), 'slds-hide');
-         $A.util.removeClass(component.find('loginFields'), 'slds-hide');
-         $A.util.removeClass(component.find('registrationField'), 'slds-hide');
-    },
+   checkEmail : function(component, event, helper) {
+       helper.checkEmailHelper(component);
+   },
 
-    sendCode : function ( component, event, helper ){
-         let name=component.get("v.name");
-         let email=component.get("v.email");
-         console.log(name+email);
-         let action = component.get("c.sendCodeController");
-         action.setParams({
-                           'name' : name,
-                           'email' : email
-                          });
-         action.setCallback(this,function(response){
-        //var result = response.getReturnValue();
-         if(response.getState() === 'SUCCESS') {
-                      			//go to roder date
-         } else {
-           var errors = response.getError();
-           if (errors && errors[0] && errors[0].message) {
-             helper.showToast({
-                               "title": "Error",
-                               "label":"Error",
-                               "message": errors[0].message
-                               });
-                                  }
-                              }
-         });
-                          $A.enqueueAction(action);
+   checkName : function(component, event, helper) {
+       helper.checkNameHelper(component);
+   },
 
-              },
+   openModel : function(component, event, helper) {
+      component.set("v.isOpen", true);
+   },
 
-    applyCode : function ( component, event, helper ){
-        let name=component.get("v.name");
-        let email=component.get("v.email");
-        let codeFromEmail=component.get("v.code");
-        let action = component.get("c.applyCodeController");
-        action.setParams({
-                          'name' : name,
-                          'email' : email,
-                          'codeFromEmail' : codeFromEmail
-                                        });
-        action.setCallback(this,function(response){
-        let result = response.getReturnValue();
-        if(response.getState() === 'SUCCESS') {
-                           			//go to roder date
-        } else {
-          var errors = response.getError();
-          if (errors && errors[0] && errors[0].message) {
-          helper.showToast({
-                            "title": "Error",
-                            "label":"Error",
-                            "message": errors[0].message
-          });
-          }
-          }
-        });
-        $A.enqueueAction(action);
-    },
+   closeModel : function(component, event, helper) {
+      component.set("v.isOpen", false);
+   },
 
-    logInCallout : function ( component, event, helper ){
-                  let name=component.get("v.name");
-                  let email=component.get("v.email");
-                  let action = component.get('c.login');
-                          action.setParams({
+   logInCallout : function (component, event, helper){
+      helper.logInCalloutHelper(component);
+   },
 
-                              'name' : name,
-                              'email' : email
+   sendCode : function (component, event, helper){
+      helper.sendCodeHelper(component);
+   },
 
-                          });
-                          action.setCallback(this,function(response){
-                          	var result = response.getReturnValue();
-                          	if(response.getState() === 'SUCCESS') {
-                          	   $A.util.removeClass(component.find('orderDiv'), 'slds-hide');
-                          	   $A.util.addClass(component.find('loginOrRegisterDiv'), 'slds-hide');
-                      			//go to roder date
-                          	} else {
-                                  // If server throws any error
-                                  var errors = response.getError();
-                                  if (errors && errors[0] && errors[0].message) {
-                                      helper.showToast({
-                                                                      "title": "Error",
-                                                                      "label":"Error",
-                                                                      "message": errors[0].message
-                                                      });
-                                  }
-                              }
+   applyCode : function (component, event, helper){
+      helper.applyCodeHelper(component);
+   },
 
-                          });
-                          $A.enqueueAction(action);
+   getMyOrder : function (component, event, helper){
+      helper.getMyOrderHelper(component);
+   },
 
-              },
+   longCheckName : function (component, event, helper){
+      let name = component.get("v.name");
+      let maxSize = 16;
+      if(name.length > maxSize){
+         component.set("v.name",name.slice(0, maxSize));
+     }
+   },
 
-              getMyOrder  : function ( component, event, helper ){
-                  console.log('BASKET ORDER');
-                  let basket=component.get("v.basket");
-                  let action = component.get('c.orderProductsController');
-                                            action.setParams({
-                                                'basket' : basket,
-                                            });
-                                            action.setCallback(this,function(response){
-                                            	var result = response.getReturnValue();
-                                            	if(response.getState() === 'SUCCESS') {
-                                            	   $A.util.removeClass(component.find('orderDiv'), 'slds-hide');
-                                            	   $A.util.addClass(component.find('loginOrRegisterDiv'), 'slds-hide');
-                                        			//go to roder date
-                                            	} else {
-                                                    // If server throws any error
-                                                    var errors = response.getError();
-                                                    if (errors && errors[0] && errors[0].message) {
-                                                        helper.showToast({
-                                                                                        "title": "Error",
-                                                                                        "label":"Error",
-                                                                                        "message": errors[0].message
-                                                                        });
-                                                    }
-                                                }
+   longCheckEmail : function (component, event, helper){
+      let email = component.get("v.email");
+      let maxSize = 36;
+      if(email.length > maxSize){
+         component.set("v.email",email.slice(0, maxSize));
+      }
+   },
 
-                                            });
-                                            $A.enqueueAction(action);
-
-
-              }
-
-
-              /*apply : function ( component, event, helper ){
-                  let action = cmp.get('c.apply');//!!!!!!!!!!!!!!!!!!!!!!!!!!parametrs name email
-                          action.setCallback(this,function(response){
-                             if(response.getState() === 'SUCCESS') {
-                                 if(response.getReturnValue()){
-                                     //!!!!!!!!!oder
-                                 }
-                                 else{
-                                     $A.util.toggleClass(activate, 'slds-hide');
-                                 }
-
-                             }/////Exception
-                          });
-                          $A.enqueueAction(action);
-
-              },
-              applyCode : function ( component, event, helper ){
-
-                  let action = cmp.get('c.apply');//!!!!!!!!!!!!!!!!!!!!!!!!!!parametrs code
-                                            action.setCallback(this,function(response){
-                                               if(response.getState() === 'SUCCESS') {
-                                                   if(response.getReturnValue()){
-                                                       //!!!!!!!!!oder
-                                                   }
-                                                   else{
-                                                       $A.util.toggleClass(activate, 'slds-hide');
-                                                   }
-
-                                               }/////Exception
-                                            });
-                                            $A.enqueueAction(action);
-
-              }*/
+   longCheckCode : function (component, event, helper){
+      let code = component.get("v.code");
+      let maxSize = 16;
+      if(code.length>maxSize){
+         component.set("v.code",code.slice(0, maxSize));
+      }
+   },
 });

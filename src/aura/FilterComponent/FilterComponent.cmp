@@ -2,31 +2,38 @@
  - Created by Master on 20.11.2019.
  -->
 
-<aura:component description="FilterComponent">
-    <div class="mainDiv">
-        <h5>Choose price</h5>
-        <lightning:input type="number"  placeholder="min"/>
-        <lightning:input type="number"  placeholder="max"/>
-        <!--<lightning:layout horizontalAlign="space" class="layoutMain">
-            <lightning:layoutItem padding="around-small" class="slds-size_4-of-8">
-                <div class="row">
-                    <lightning:input type="number"  placeholder="min"/>
-                </div>
-            </lightning:layoutItem>
-            &lt;!&ndash;<aura:attribute name="amount" type="Integer"/>&ndash;&gt;
-            <lightning:layoutItem padding="around-small" class="slds-size_4-of-8">
-                <div class="row">
-                    <lightning:input type="number"  placeholder="max"/>
-                </div>
-            </lightning:layoutItem>
+<aura:component description="FilterComponent" controller="ProductTableController">
 
+    <aura:attribute name="products" type="Product2[]" required="false" description="" access="public"/>
+    <aura:attribute name="min" type="Integer" required="false" description="" access="public"/>
+    <aura:attribute name="max" type="Integer" required="false" description="" access="public"/>
+    <aura:attribute name="dependingType" type="string" description="store field API name of dependent field"/>
+    <aura:attribute name="dependingSubtype" type="string" description="store field API name of dependent field"/>
+    <aura:registerEvent name="appEvent" type="c:FilterEvent"/>
 
-        </lightning:layout>-->
-    </div>
-    <div>
-        <h5>Choose price</h5>
-        <lightning:input type="number"  placeholder="min"/>
-        <lightning:input type="number"  placeholder="max"/>
-    </div>
-    <div></div>
+    <lightning:layoutItem size="12" padding="around-small">
+        <div class="slds-align_absolute-left slds-text-align_center">
+            <lightning:layoutItem size="12" class="slds-align_absolute-left slds-text-align_center">
+                <lightning:input label="Min" type="number" placeholder="Min" value="{!v.min}" min="0" maxlength="16"
+                                 onchange="{!c.minChange}"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12" class="slds-align_absolute-left slds-text-align_center">
+                <lightning:input label="Max" type="number" placeholder="Max" value="{!v.max}" min="0" maxlength="16"
+                                 onchange="{!c.maxChange}"/>
+            </lightning:layoutItem>
+        </div>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" padding="around-small">
+        <div class="slds-align_absolute-left slds-text-align_center">
+            <c:DependentPickListComponent dependingType="{!v.dependingType}" dependingSubtype="{!v.dependingSubtype}"/>
+        </div>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" padding="around-small">
+        <div class="slds-align_absolute-center slds-text-align_center">
+            <lightning:button variant="brand"
+                              label="Submit"
+                              title="Submit"
+                              onclick="{! c.submit }"/>
+        </div>
+    </lightning:layoutItem>
 </aura:component>

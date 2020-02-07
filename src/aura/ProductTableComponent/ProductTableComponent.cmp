@@ -2,40 +2,67 @@
  - Created by Master on 20.11.2019.
  -->
 
-<aura:component description="ProductTableComponent" controller="ProductTableController">
+<aura:component description="ProductTableComponent" controller="ProductTableController"
+                implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global">
 
-    <aura:attribute name="basket" type="Product2[]" required="false" description="" access="public"/>
+    <aura:handler event="c:FilterEvent" action="{!c.doFilter}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="min" type="Integer" required="false" description="" access="public"/>
+    <aura:attribute name="max" type="Integer" required="false" description="" access="public"/>
+    <aura:attribute name="dependingType" type="string" description="store field API name of dependent field"/>
+    <aura:attribute name="dependingSubtype" type="string" description="store field API name of dependent field"/>
+    <aura:attribute name="page" type="integer" description="using for store page Number"/>
+    <aura:attribute name="pages" type="integer" description="using for store All Pages page Number"/>
+    <aura:attribute name="total" type="integer" description="total records count store "/>
+    <aura:attribute name="basket" type="List" required="false" description="" access="public"/>
     <aura:attribute name="products" type="Product2[]" required="false" description="" access="public"/>
     <aura:attribute name="detailProduct" type="Product2" required="false" description="" access="public"/>
     <aura:attribute name="isDetail" type="boolean" default="false"/>
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-
-    <div>
-        <aura:iteration items="{!v.products}" var="item">
-            <lightning:card title="{!item.Name}">
-                <lightning:layout verticalAlign="center">
-                    <lightning:layoutItem padding="around-small" class="slds-size_2-of-8">
-                        <img src="{!item.Picture__c}" width="50" height="50"/>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
-                        <p>{!item.Price__c}$</p>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_3-of-8">
-                        <p>{!item.Description}</p>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
-                        <lightning:button value="{!item.Id}" label="To basket" onclick="{!c.toBasket }"/>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem padding="around-small" class="slds-size_1-of-8">
-                        <lightning:button value="{!item}" label="Details" onclick="{!c.details }"/>
-                    </lightning:layoutItem>
-                </lightning:layout>
-            </lightning:card>
-        </aura:iteration>
+    <aura:handler event="c:cleaner" action="{!c.clean}"/>
+    <div class="slds-align_absolute-center slds-p-around-small">
+        <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous Page" onclick="{! c.navigate }"/>
+        <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand" label="Next Page"
+                          onclick="{! c.navigate }"/>
     </div>
-    <aura:if isTrue="{!v.isDetail}">
-        <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}" />
+    <aura:if isTrue="{!not(empty(v.products))}">
+        <div class="slds-p-around--small">
+            <aura:iteration items="{!v.products}" var="item">
+                <lightning:card title="{!item.Name}">
+                    <lightning:layout verticalAlign="center">
+                        <lightning:layoutItem padding="around-small" size="2">
+                            <img src="{!item.Picture__c}" width="50" height="50"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="1">
+                            <p>{!item.Price__c}$</p>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <p>{!item.Description}</p>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="3">
+                            <div class="slds-align_absolute-center slds-text-align_center">
+                                <lightning:button value="{!item.Id}" label="Add to basket"
+                                                  class="slds-text-body_regular" onclick="{!c.toBasket }"
+                                                  variant="brand"/>
+                                <lightning:button value="{!item}" label="Details" onclick="{!c.details }"
+                                                  variant="brand"/>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:card>
+            </aura:iteration>
+        </div>
+        <aura:if isTrue="{!v.isDetail}">
+            <c:DetailsComponent detailProduct="{!v.detailProduct}" isDetail="{!v.isDetail}"/>
+        </aura:if>
+        <aura:set attribute="else">
+            <div class="slds-text-align_center">
+                <img src="https://icon-library.net/images/sorry-icon/sorry-icon-12.jpg" height="300" width="300"/>
+                <h1 class="h1Logo slds-text-align_center">It's empty</h1>
+            </div>
+        </aura:set>
+
     </aura:if>
 </aura:component>
 

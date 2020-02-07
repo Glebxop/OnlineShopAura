@@ -1,33 +1,37 @@
-/**
- * Created by Master on 21.11.2019.
- */
-
 ({
 
-    doInit : function(cmp,ev,helper){
-        let action = cmp.get('c.getProducts');
-        action.setCallback(this,function(response){
-        if(response.getState() === 'SUCCESS') {
-           cmp.set("v.products",response.getReturnValue());
-        }
-        });
-        $A.enqueueAction(action);
-    },
+  doInit: function(component, event, helper) {
+      let page = component.get("v.page") || 1;
+      let recordToDisply = 2;
+      helper.getProducts(component, page, recordToDisply);
+  },
 
-    toBasket : function(cmp,ev,helper){
-         let products=cmp.get("v.products");
-         let basket = cmp.get("v.basket");
-         for (let i = 0; i < products.length; i++) {
-            if(ev.getSource().get("v.value")==products[i].Id){
-               basket.push(products[i]);
-            }
-         }
-         cmp.set("v.basket",basket);
-    },
+  doFilter : function(component, event, helper) {
+      component.set("v.page",1);
+      helper.getProducts(component, 1, 2);
+  },
 
-    details : function ( component, event, helper ){
-         component.set("v.isDetail",true);
-         component.set("v.detailProduct",event.getSource().get("v.value"));
-    },
+  navigate: function(component, event, helper) {
+      let page = component.get("v.page") || 1;
+      let direction = event.getSource().get("v.label");
+      let recordToDisply = 2
+      page = direction === "Previous Page" ? (page - 1) : (page + 1);
+      helper.getProducts(component, page, recordToDisply);
+  },
+
+  toBasket : function(cmp,ev,helper){
+      helper.toBasketHelper(cmp,ev.getSource().get("v.value"));
+  },
+
+  details : function ( component, event, helper ){
+      helper.detailsHelper(component, event.getSource().get("v.value"));
+  },
+
+  clean : function(cmp, event) {
+      cmp.set("v.min",undefined);
+      cmp.set("v.max",undefined);
+      cmp.set("v.dependingType",undefined);
+      cmp.set("v.dependingSubtype",undefined);
+  }
 
 });

@@ -2,38 +2,37 @@
  * Created by Master on 22.11.2019.
  */
 
-public with sharing class LoginController {
+public class LoginController {
 
     @AuraEnabled
-    public static Boolean login(String name, String email) {
+    public static Id login(String name, String email) {
         Contact contact;
-        List< Contact> contacts = [
-                SELECT Id,LastName,Email,Activ__c,Active_Code__c
-                FROM Contact
-                WHERE LastName = :name AND Email = :email
-        ];
-        if (contacts.size() > 0) {
+        List<Contact> contacts = getContacts(name, email);
+        if (!contacts.isEmpty()) {
             contact = contacts.get(0);
         }
         if (contact == null) {
             throw new ShopException('You did not register or wrong name or email');
         }
         if (contact.Activ__c) {
-            return true;
+            return contact.Id;
         } else {
             throw new ShopException('You did not activate your account');
         }
     }
-
-    @AuraEnabled
-    public static Boolean applyCodeController(String name, String email, String codeFromEmail) {
-        Contact contact;
-        List<Contact> contacts = [
-                SELECT Id,LastName,Email,Activ__c,Active_Code__c
+    private static List<Contact> getContacts(String name, String email) {
+        return [
+                SELECT Id,Name__c,Email__c,Activ__c,Active_Code__c
                 FROM Contact
-                WHERE LastName = :name AND Email = :email
+                WHERE Name__c = :name AND Email__c = :email
                 LIMIT 1
         ];
+    }
+
+    @AuraEnabled
+    public static Id applyCodeController(String name, String email, String codeFromEmail) {
+        Contact contact;
+        List<Contact> contacts = getContacts(name, email);
         if (contacts.size() > 0) {
             contact = contacts.get(0);
         } else {
@@ -42,7 +41,7 @@ public with sharing class LoginController {
         if (contact.Active_Code__c == codeFromEmail) {
             contact.Activ__c = true;
             update contact;
-            return true;
+            return contact.Id;
         } else {
             throw new ShopException('You code is wrong');
         }
@@ -50,66 +49,41 @@ public with sharing class LoginController {
     }
 
     @AuraEnabled
-    public static Boolean sendCodeController( String name, String email ) {
-        Contact contact = new Contact(
-                LastName = name, Email = email
-        );
+    public static Boolean sendCodeController(String name, String email) {
+        Contact contact = new Contact();
+        contact.LastName = name;
+        contact.Name__c = name;
+        contact.Email__c = email;
         try {
             insert contact;
-            sendMessage( contact.Id );
+            contact = [
+                    SELECT Id,Active_Code__c,Email__c
+                    FROM Contact
+                    WHERE Id = :contact.Id
+            ];
+            sendMessage(contact.Email__c, 'Code', 'Your code is ' + contact.Active_Code__c);
             return true;
         } catch (DmlException e) {
-            throw new ShopException(e.getCause());
+            String dmlExceString = '';
+            for (Integer i = 0; i < e.getNumDml(); i++) {
+                dmlExceString += e.getDmlMessage(i);
+            }
+            if (dmlExceString.containsIgnoreCase('duplicate value found')) {
+                dmlExceString = 'This name or email is busy';
+            }
+            throw new ShopException(dmlExceString);
         } catch (EmailException e) {
             throw new ShopException(e.getCause());
         }
-
-/*Boolean isActivate;
-Contact contactFromDb = new Contact();
-List<Contact> contacts =[
-        SELECT Id
-        FROM Contact
-        WHERE LastName = :name AND Email = :email
-        LIMIT 1];
-if (contacts.size()>0){
-contactFromDb=contacts.get(0);}
-
-
-if (contactFromDb != null && contactFromDb.Activ__c) {
-    isActivate = true;
-}
-if (contactFromDb != null && !contactFromDb.Activ__c) {
-    try {
-        sendMessage(contactFromDb);
-        isActivate = false;
-    } catch (Exception e) {
-        throw e;
     }
 
-}
-
-if (contactFromDb == null) {
-    try {
-        Contact contact = new Contact(LastName = name, Email = email);
-        insert contact;
-        sendMessage(contact);
-        isActivate = false;
-    } catch (Exception e) {
-        throw e;
-    }
-
-}
-return isActivate;*/
-    }
-
-    private static void sendMessage(Id contactId) {
-        Contact contact = [SELECT Active_Code__c,Email FROM Contact WHERE Id = :contactId];
+    private static void sendMessage(String email, String subject, String textMessage) {
         Messaging.SingleEmailMessage emailMessage = new Messaging.SingleEmailMessage();
         List<String> address = new List<String>();
-        address.add(contact.Email);
+        address.add(email);
         emailMessage.setToAddresses(address);
-        emailMessage.setSubject('Code');
-        emailMessage.setPlainTextBody('Your code is ' + (contact.Active_Code__c));
+        emailMessage.setSubject(subject);
+        emailMessage.setPlainTextBody(textMessage);
         try {
             Messaging.sendEmail(new Messaging.SingleEmailMessage[]{
                     emailMessage
@@ -120,10 +94,41 @@ return isActivate;*/
     }
 
     @AuraEnabled
-    public static void orderProductsController(List<Product2> basket){
+    public static void orderProductsController(Map<Id, Integer> basket, Id contactId, Datetime timeOfDispatch, Integer totalCount) {
+        List <Order_from_shop_item__c> orderItems = new List <Order_from_shop_item__c>();
+        Contact contact = [
+                SELECT Id,Email__c,Name__c
+                FROM Contact
+                WHERE Id = :contactId
+                LIMIT 1
+        ];
+        Order_from_shop__c orderFromShop = new Order_from_shop__c();
+        orderFromShop.ContactId__c = contactId;
+        orderFromShop.Dispatch_time__c = timeOfDispatch;
+        orderFromShop.Total_cost__c = totalCount;
+        insert orderFromShop;
 
-        System.debug('Basket');
-        System.debug(basket);
+        String orderItem = 'Dear ' + contact.Name__c + ' your order includes:\n';
+        for (Id id : basket.keySet()) {
+            orderItems.add(new Order_from_shop_item__c(
+                    ProdId__c = id,
+                    Quantity__c = basket.get(id),
+                    Order_from_shop__c = orderFromShop.Id)
+            );
+        }
+        insert orderItems;
+        List<Product2>products = [
+                SELECT Id,Name
+                FROM Product2
+                WHERE Id IN :basket.keySet()
+        ];
+        for (Product2 product : products) {
+            orderItem += product.Name + '*' + basket.get(product.Id) + ';\n';
+        }
+
+        orderItem += '\n' + 'Total cost: ' + totalCount + '$' + '\nDate of dispatch: ' + timeOfDispatch;
+        sendMessage(contact.Email__c, 'Order', orderItem);
+
     }
 
 
